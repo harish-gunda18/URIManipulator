@@ -20,6 +20,7 @@ access these attributes of the class as follows
 foo.scheme
 foo.authority
 ..etc
+Note: returns None if not present or given
 
 METHODS:
 
@@ -30,5 +31,5 @@ foo.append_query(query)
 foo.update_schema(scheme)
 ..etc
 
-Note:The methods automatically encodes the unsafe characters of the string before updating
-Also there is no clear defenition for a domain name. Hence it is impossible to fetch the domain name from the hostname.However after going through some web articles I found a nice package called PublicSuffixList which extracts domain name from hostname from a public list, but the pitfall here is that the public list is exhaustive
+Note:The methods automatically encodes the unsafe characters of the string before updating.
+Also there is no clear definition for a domain name. Hence it is impossible to fetch the domain name from the hostname.However after going through some web articles I found a nice package called PublicSuffixList which extracts domain name from hostname from a public list, but the pitfall is that the public list is exhaustive.
