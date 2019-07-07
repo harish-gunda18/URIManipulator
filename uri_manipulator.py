@@ -32,7 +32,7 @@ QUERY_R = re.compile('|'.join([r'[A-Za-z0-9\-\.\_\~]',
                                r'[\:\@]', r'[\/\?]']))
 PATH_R = re.compile('|'.join([r'[A-Za-z0-9\-\.\_\~]',
                               r"[\!\$\&\'\(\)\*\+\,\;\=]",
-                              r'[\:\@]',r'[\@]']))
+                              r'[\:\@]', r'[\@]']))
 FRAGMENT_R = QUERY_R
 
 
@@ -117,7 +117,6 @@ class UriHandler:
                 return self.authority
             else:
                 return self.authority.split(':')[0]
-        
 
     def append_query(self, append_query):
         """
