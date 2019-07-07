@@ -32,7 +32,7 @@ QUERY_R = re.compile('|'.join([r'[A-Za-z0-9\-\.\_\~]',
                                r'[\:\@]', r'[\/\?]']))
 PATH_R = re.compile('|'.join([r'[A-Za-z0-9\-\.\_\~]',
                               r"[\!\$\&\'\(\)\*\+\,\;\=]",
-                              r'[\:\@]']))
+                              r'[\:\@]',r'[\@]']))
 FRAGMENT_R = QUERY_R
 
 
@@ -183,8 +183,8 @@ class UriHandler:
         Args:
             new_path: path to update
         """
-        new_path = self.encode(PATH_R, new_path)
-        self.uri_components_list[4] = new_path
+        new_path = self.encode(PATH_R, new_path[1:])
+        self.uri_components_list[4] = '/' + new_path
         self.uri = self.uri_builder()
 
     def update_fragment(self, new_fragment):
