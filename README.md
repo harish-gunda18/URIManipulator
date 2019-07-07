@@ -1,4 +1,34 @@
 # URIManipulator
-In Python, write a class or module with a bunch of functions for manipulating a URI. For this exercise, pretend that the urllib, urllib2, and urlparse modules don't exist. You can use other standard Python modules, such as re, for this. The focus of the class or module you write should be around usage on the web, so you'll want to have things that make it easier to update or append a querystring var, get the scheme for a URI, etc., and you may want to include ways to figure out the domain for a URL (British-site.co.uk, us-site.com, etc.)  
+PREREQUISITES:
+Python3+
+packages:re,binascii
 
-We're looking for correctness (you'll probably want to read the relevant RFCs; make sure you handle edge cases), and elegance of your API (does it let you do the things you commonly want to do with URIs in a really straightforward way?,) as well as coding style. If you don't know Python already, then this is also an exercise in learning new things quickly and well. Your code should be well-commented and documented and conform to the guidlines in the PEP 8 Style Guide for Python Code. Include some instructions and examples of usage in your documentation. You may also want to write unit tests.
+GENERAL USE:
+
+create a UriHandler object using URI
+foo=UriHandler('https://test.me?this=that')
+
+or alternatively using
+foo=UriHandler.from_uri_list(['https:','//test.me','','?this=that',''])   #list format - [scheme:, //authority, /path, ?query, #fragement]
+
+
+ATTRIBUTES:
+
+scheme,authority,path,query,fragment,port,host,userinfo
+
+access these attributes of the class as follows
+foo.scheme
+foo.authority
+..etc
+
+METHODS:
+
+append_query,update_query,update_schema,update_path,update_fragment
+
+call these methods as follows
+foo.append_query(query)
+foo.update_schema(scheme)
+..etc
+
+Note:The methods automatically encodes the unsafe characters of the string before updating
+Also there is no clear defenition for a domain name. Hence it is impossible to fetch the domain name from the hostname.However after going through some web articles I found a nice package called PublicSuffixList which extracts domain name from hostname from a public list, but the pitfall here is that the public list is exhaustive

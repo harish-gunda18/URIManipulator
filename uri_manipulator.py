@@ -41,13 +41,25 @@ class UriHandler:
     def __init__(self, uri):
         """
         returns an uri object
-        e.g : x = UriHandler(uri)
+        e.g : x = UriHandler(uri) 
 
         Args:
             uri: uri string
         """
         self.uri = uri
         self.uri_components_list = list(re.findall(URI_REGEX, uri)[0])
+
+    @classmethod
+    def from_uri_list(cls, uri_list):
+        """
+        returns an uri object
+        e.g : x = UriHandler.from_uri_list(uri_list)
+
+        Args:
+            uri_list: [schema,authority,path,query,fragement]
+        """
+        uri = ''.join(uri_list)
+        return cls(uri)
 
     @property
     def schema(self):
