@@ -41,7 +41,7 @@ class UriHandler:
     def __init__(self, uri):
         """
         returns an uri object
-        e.g : x = UriHandler(uri) 
+        e.g : x = UriHandler(uri)
 
         Args:
             uri: uri string

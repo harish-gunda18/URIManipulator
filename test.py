@@ -7,20 +7,66 @@ Created on Thu Jul  4 19:30:28 2019
 
 """
 from uri_manipulator import UriHandler
+import unittest
 
-DEMO_URI = r'https://www.google.com:123/search?q=setter+python&oq=setter+python&aqs=chrome..69i57j0l3.9438j0&sourceid=chrome&ie=UTF-8'
-#my_uri = UriHandler(DEMO_URI)
-my_uri = UriHandler.from_uri_list(['https:','//www.google.com','/search','?q=setter',''])
-print(my_uri.uri_components_list)
-print(my_uri.schema)
-print(my_uri.authority)
-print(my_uri.path)
-print(my_uri.querystring)
-print(my_uri.fragment)
-print(my_uri.port)
-print(my_uri.userinfo)
-print(my_uri.host)
-print('updating query')
-my_uri.update_query('foo=bar')
-print(my_uri.querystring)
 
+class TestUri(unittest.TestCase):
+
+    def setUp(self):
+        """
+        defining all the test cases
+        """
+        # has all the components
+        self.google_case = UriHandler(r'https://user:password@www.google.com:123/search?q=setter+python&oq=setter+python&aqs=chrome..69i57j0l3.9438j0&sourceid=chrome&ie=UTF-8#hello')
+
+    def test_scheme(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.schema, 'https')
+
+    def test_authority(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.authority, 'user:password@www.google.com:123')
+
+    def test_path(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.path, '/search')
+
+    def test_querystring(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.querystring, 'q=setter+python&oq=setter+python&aqs=chrome..69i57j0l3.9438j0&sourceid=chrome&ie=UTF-8')
+
+    def test_fragment(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.fragment, 'hello')
+
+    def test_port(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.port, 123)
+
+    def test_userinfo(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.userinfo, 'user:password')
+
+    def test_host(self):
+        """
+        testing if scheme is parsed properly
+        """
+        self.assertEqual(self.google_case.host, 'www.google.com')
+
+
+if __name__ == "__main__":
+    unittest.main()
