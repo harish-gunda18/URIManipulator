@@ -11,6 +11,7 @@ https://blog.mariam.dev/2016/10/13/murl-init.html,
 https://github.com/venantius/takehome/tree/master/uriparse
 This file contains URIHandler class and its constituents as per RFC 3986
 """
+# Importing required packages
 import binascii
 import re
 
@@ -23,17 +24,16 @@ URI_REGEX = re.compile(
 # Authority patterns
 USERINFO_PATTERN = re.compile(
         r"((?:[A-Za-z0-9\-._~!$&'()*+,;=:]|%[0-9A-Fa-f]{2})*)@")
-PORT_PATTERN = re.compile(r":([0-9]+$)")
+PORT_PATTERN = re.compile(r":([0-9]+)$")
 
-# Regexes(allowed characters) for each component
-DEC_OCTET = r'(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
-UNRESERVED = r'[A-Za-z0-9\-\.\_\~]'
-GEN_DELIMS = r'[\:\/\?\#\[\]\@]'
-SUB_DELIMS = r"[\!\$\&\'\(\)\*\+\,\;\=]"
-
-# Query regex
-QUERY_REGEX = re.compile('|'.
-                         join([UNRESERVED, SUB_DELIMS, r'[\:\@]', r'[\/\?]']))
+# REGEXES of components(R is short for REGEX)
+QUERY_R = re.compile('|'.join([r'[A-Za-z0-9\-\.\_\~]',
+                               r"[\!\$\&\'\(\)\*\+\,\;\=]",
+                               r'[\:\@]', r'[\/\?]']))
+PATH_R = re.compile('|'.join([r'[A-Za-z0-9\-\.\_\~]',
+                              r"[\!\$\&\'\(\)\*\+\,\;\=]",
+                              r'[\:\@]']))
+FRAGMENT_R = QUERY_R
 
 
 class UriHandler:
@@ -51,55 +51,71 @@ class UriHandler:
 
     @property
     def schema(self):
+        if self.uri_components_list[1] == '':
+            return None
         return self.uri_components_list[1]
 
     @property
     def authority(self):
+        if self.uri_components_list[3] == '':
+            return None
         return self.uri_components_list[3]
 
     @property
     def path(self):
-        return self.uri_components_list[3]
+        if self.uri_components_list[4] == '':
+            return None
+        return self.uri_components_list[4]
 
     @property
     def querystring(self):
+        if self.uri_components_list[6] == '':
+            return None
         return self.uri_components_list[6]
 
     @property
     def fragment(self):
+        if self.uri_components_list[8] == '':
+            return None
         return self.uri_components_list[8]
 
     @property
     def port(self):
         port_tuple = re.findall(PORT_PATTERN, self.authority)
         if port_tuple != []:
-            return port_tuple[0]
-        return ''
+            return int(port_tuple[0])
+        return None
 
     @property
     def userinfo(self):
         userinfo_tuple = re.findall(USERINFO_PATTERN, self.authority)
         if userinfo_tuple != []:
             return userinfo_tuple[0]
-        return ''
+        return None
 
     @property
     def host(self):
-        if self.userinfo == '':
-            return self.authority
-        if self.port == '':
-            return self.authority.split('@')[1]
-        return self.authority.split('@')[1].split(':')[0]
+        if self.userinfo is not None:
+            if self.port is not None:
+                return self.authority.split('@')[1].split(':')[0]
+            else:
+                return self.authority.split('@')[1]
+        else:
+            if self.port is None:
+                return self.authority
+            else:
+                return self.authority.split(':')[0]
+        
 
     def append_query(self, append_query):
         """
-        appends query variable to append query
+        appends query variable to append query with encoding
 
         Args:
             append_query: string to append
         """
-        append_query = self.encode(QUERY_REGEX, append_query)
-        if self.querystring != '':
+        append_query = self.encode(QUERY_R, append_query)
+        if self.querystring is not None:
             self.uri_components_list[5] = self.uri_components_list[5] + '&' \
                 + append_query
             self.uri_components_list[6] = self.uri_components_list[6] + '&' \
@@ -116,12 +132,12 @@ class UriHandler:
 
     def update_query(self, update_query):
         """
-        updates query variable to update_query
+        updates query variable to update_query with encoding
 
         Args:
             update_query: string to update
         """
-        update_query = self.encode(QUERY_REGEX, update_query)
+        update_query = self.encode(QUERY_R, update_query)
         self.uri_components_list[5] = '?' + update_query
         self.uri_components_list[6] = update_query
         self.uri = self.uri_builder()
@@ -150,21 +166,23 @@ class UriHandler:
 
     def update_path(self, new_path):
         """
-        updates path to new_path
+        updates path to new_path with encoding
 
         Args:
             new_path: path to update
         """
+        new_path = self.encode(PATH_R, new_path)
         self.uri_components_list[4] = new_path
         self.uri = self.uri_builder()
 
     def update_fragment(self, new_fragment):
         """
-        updates fragment to new_fragment
+        updates fragment to new_fragment with encoding
 
         Args:
             new_fragment: fragment to update
         """
+        new_fragment = self.encode(FRAGMENT_R, new_fragment)
         self.uri_components_list[7] = '#' + new_fragment
         self.uri_components_list[8] = new_fragment
         self.uri = self.uri_builder()
