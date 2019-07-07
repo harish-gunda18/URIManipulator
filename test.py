@@ -7,11 +7,13 @@ Created on Thu Jul  4 19:30:28 2019
 
 """
 from uri_manipulator import UriHandler
-DEC_OCTET = r'(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)'
-UNRESERVED = r'[A-Za-z0-9\-\.\_\~]'
-GEN_DELIMS = r'[\:\/\?\#\[\]\@]'
-SUB_DELIMS = r"[\!\$\&\'\(\)\*\+\,\;\=]"
 
-DEMO_URI = r'https://scott:tiger@drive.example.com:123/path/to/happiness.html?hello=world#go'
+
+DEMO_URI = r'https://www.google.com/search?q=setter+python&oq=setter+python&aqs=chrome..69i57j0l3.9438j0&sourceid=chrome&ie=UTF-8'
 my_uri = UriHandler(DEMO_URI)
+print(my_uri.uri_components_list)
 print(my_uri.host)
+print(my_uri.port)
+print(my_uri.userinfo)
+my_uri.append_query('lanmun=ganga jal')
+print(my_uri.querystring)
